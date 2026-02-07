@@ -1,0 +1,15 @@
+{
+  "extractedFields": {
+    "policyNumber": "POL12345",
+    "policyholderName": "John Doe",
+    "incidentDate": "12/10/2024",
+    "location": "New York",
+    "description": "Rear-end collision at traffic signal",
+    "claimType": "vehicle",
+    "estimatedDamage": 18000,
+    "initialEstimate": 18000
+  },
+  "missingFields": [],
+  "recommendedRoute": "Fast-track",
+  "reasoning": "Estimated damage below threshold and no fraud indicators found."
+}
