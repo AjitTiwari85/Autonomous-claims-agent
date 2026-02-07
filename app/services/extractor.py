@@ -1,23 +1,38 @@
-import re
+from app.utils.helpers import safe_search, to_int, is_valid_value
+
 
 def extract_fields(text: str) -> dict:
     data = {}
 
-    def find(pattern):
-        match = re.search(pattern, text, re.IGNORECASE)
-        return match.group(1).strip() if match else None
+    # Policy Number
+    value = safe_search(r"Policy Number[:\s]+(.+)", text)
+    data["policyNumber"] = value if is_valid_value(value) else None
 
-    data["policyNumber"] = find(r"Policy Number[:\s]+(\w+)")
-    data["policyholderName"] = find(r"Name of Insured[:\s]+(.+)")
-    data["incidentDate"] = find(r"Date of Loss[:\s]+([\d/]+)")
-    data["location"] = find(r"Location of Loss[:\s]+(.+)")
-    data["description"] = find(r"Description of Accident[:\s]+(.+)")
-    data["estimatedDamage"] = find(r"Estimate Amount[:\s]+([\d,]+)")
+    # Policyholder Name
+    value = safe_search(r"Name of Insured[:\s]+(.+)", text)
+    data["policyholderName"] = value if is_valid_value(value) else None
 
-    if data["estimatedDamage"]:
-        data["estimatedDamage"] = int(data["estimatedDamage"].replace(",", ""))
+    # Incident Date
+    value = safe_search(r"Date of Loss[:\s]+(.+)", text)
+    data["incidentDate"] = value if is_valid_value(value) else None
 
+    # Location
+    value = safe_search(r"Location of Loss[:\s]+(.+)", text)
+    data["location"] = value if is_valid_value(value) else None
+
+    # Description
+    value = safe_search(r"Description of Accident[:\s]+(.+)", text)
+    data["description"] = value if is_valid_value(value) else None
+
+    # Estimated Damage
+    value = safe_search(r"Estimate Amount[:\s]+(.+)", text)
+    value = value if is_valid_value(value) else None
+    data["estimatedDamage"] = to_int(value)
+
+    # Claim type heuristic
     data["claimType"] = "injury" if "injur" in text.lower() else "vehicle"
+
+    # initial estimate
     data["initialEstimate"] = data["estimatedDamage"]
 
     return data
