@@ -20,19 +20,16 @@ def is_valid_value(value: str):
 
     value = value.strip()
 
-    # too big → heading
     if len(value) > 60:
         return False
 
-    # all caps → label
-    if value.isupper():
+    # reject if too many words and uppercase (likely label)
+    if value.isupper() and len(value.split()) > 2:
         return False
 
-    # contains instruction brackets
     if "(" in value and ")" in value:
         return False
 
-    # common form words
     blacklist = [
         "address",
         "contact",
