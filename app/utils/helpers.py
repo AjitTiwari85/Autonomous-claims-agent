@@ -20,10 +20,30 @@ def is_valid_value(value: str):
 
     value = value.strip()
 
+    # too big → heading
     if len(value) > 60:
         return False
 
+    # all caps → label
     if value.isupper():
+        return False
+
+    # contains instruction brackets
+    if "(" in value and ")" in value:
+        return False
+
+    # common form words
+    blacklist = [
+        "address",
+        "contact",
+        "phone",
+        "department",
+        "policyholder",
+        "insured",
+        "mailing"
+    ]
+
+    if any(word in value.lower() for word in blacklist):
         return False
 
     return True
